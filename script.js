@@ -14,6 +14,8 @@ var tempseconds;
 var tempbreakminutes;
 var tempbreakseconds;
 
+
+var running = 0;
 var sessiontime = 1;
 var breaktime = 1;
 var startflag = 0;
@@ -26,8 +28,10 @@ let timer;
 let breaktimer;
 
 splus.addEventListener('click', ()=>{
+    if(running==1)
+        return;
     if(seconds == 0 && minutes == 0){
-        timeofsession.innerHTML = 1 + "mins";
+        timeofsession.innerHTML = 1 + " mins";
         seconds = 60;
         minutes = 0;
         tempminutes = minutes;
@@ -41,24 +45,31 @@ splus.addEventListener('click', ()=>{
     tempseconds = seconds;
     tempbreakminutes = breakminutes;
     tempbreakseconds = breakseconds;
-    timeofsession.innerHTML = (minutes+1) + "mins";
+    timeofsession.innerHTML = (minutes+1) + " mins";
 });
 
 
 sminus.addEventListener('click', ()=>{
-    if(minutes == 0)
+    if(running==1)
         return;
-    
-    //if(minutes == 0 && seconds == 60)
-        //timeofsession.innerHTML = 1 + "mins";
-
+    if(minutes == 0){
+        seconds = 0;
+        timeofsession.innerHTML = (minutes) + " mins";
+        return;
+    }
     minutes--;
-    timeofsession.innerHTML = (minutes+1) + "mins";
+    tempminutes = minutes;
+    tempseconds = seconds;
+    tempbreakminutes = breakminutes;
+    tempbreakseconds = breakseconds;
+    timeofsession.innerHTML = (minutes+1) + " mins";
 });
 
 bplus.addEventListener('click', ()=>{
+    if(running==1)
+        return;
     if(breakseconds == 0 && breakminutes == 0){
-        timeofbreak.innerHTML = 1 + "mins";
+        timeofbreak.innerHTML = 1 + " mins";
         breakseconds = 60;
         breakminutes = 0;
         tempminutes = minutes;
@@ -72,19 +83,25 @@ bplus.addEventListener('click', ()=>{
     tempbreakminutes = breakminutes;
     tempbreakseconds = breakseconds;
     breakminutes++;
-    timeofbreak.innerHTML = (breakminutes+1) + "mins";
+    timeofbreak.innerHTML = (breakminutes+1) + " mins";
 });
 
 
 bminus.addEventListener('click', ()=>{
-    if(breakminutes == 0)
+    if(running==1)
         return;
-    breakminutes--;
+    if(breakminutes == 0){
+        breakseconds = 0;
+        timeofbreak.innerHTML = (breakminutes) + " mins";
+        return;
+    }
+    
     tempminutes = minutes;
     tempseconds = seconds;
     tempbreakminutes = breakminutes;
     tempbreakseconds = breakseconds;
-    timeofbreak.innerHTML = (breakminutes+1) + "mins";
+    breakminutes--;
+    timeofbreak.innerHTML = (breakminutes+1) + " mins";
 });
 
 
@@ -108,6 +125,7 @@ startbtn.addEventListener('click', ()=>{
 
 
 function startTimer(){
+    running = 1;
     screen.style.color = "rgb(0, 202, 202)";
     andaflag = 0;
     if(seconds==0 && minutes==0){
@@ -149,6 +167,7 @@ function startTimer(){
 
 
 function startBreakTimer(){
+    running = 1;
     screen.style.color="orangered";
     andaflag = 1;
     if(breakseconds==0&&breakminutes==0){
@@ -203,4 +222,5 @@ resetbtn.addEventListener('click', ()=>{
     document.getElementById('sessioninfo').innerHTML = "Session";
     timeofbreak.innerHTML = "0 mins";
     timeofsession.innerHTML = "0 mins";
+    running = 0;
 });
